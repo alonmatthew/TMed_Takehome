@@ -5,7 +5,8 @@ import { Loading } from './Loading';
 import axios from 'axios';
 
 export const CoreDiabetes = () => {
-    // NOTE: had some issues importing flot time plugin. 
+    // NOTE: had some issues importing flot time plugin 
+    // and other libraries for bonus points.
     // x axis is in whole numbers instead of converted to military time.
     const [patient, setPatient] = useState({});
     const [graphData, setGraphData] = useState({});
@@ -13,6 +14,18 @@ export const CoreDiabetes = () => {
 
     function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function fixDate(str) {
+        const split = str.split('');
+        const deleted1 = split.splice(2, 0, '/');
+        const deleted2 = split.splice(5, 0, '/');
+
+        return split.join('');
     }
 
     // fetch api data and set to patient variable
@@ -90,8 +103,8 @@ export const CoreDiabetes = () => {
             { !patient.demographics ? <Loading /> :
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-sm-2 header-border">
-                            <p>Core Diabetes App (TransformativeMed)</p>
+                        <div className="col-sm-2 header-border center-y h-100">
+                            <p className="center-y">Core Diabetes App (TransformativeMed)</p>
                         </div>
                         <div className="col-sm-10 header-border">
                             <div className="row center-y h-100">
@@ -100,7 +113,7 @@ export const CoreDiabetes = () => {
                                 </div>
                                 <div className="col-sm-2">
                                     <h6>Age: { patient.demographics.age }</h6>
-                                    <h6>Gender: { patient.demographics.gender }</h6>
+                                    <h6>Gender: { capitalize(patient.demographics.gender) }</h6>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +121,7 @@ export const CoreDiabetes = () => {
                     <div id="graph-placeholder">
                         { graphDates.map(date => {
                             return (<div key={date} className="row graph-block">
-                                <div className={`col-md-2 graph-date center-y`}>{date}</div>
+                                <div className={`col-md-2 graph-date center-y`}>{ fixDate(date)}</div>
                                 <div className={`col-md-10 graph graph-${date}`}></div>
                                 </div>)
                         }) }
